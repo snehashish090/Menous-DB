@@ -27,18 +27,28 @@ def check_database_exists(name):
     else:
         return False
 
+def check_table_exists(database, table):
+    data = read_db(database)
+    if table not in data.keys():
+        return False
+    else:
+        return True
+        
 def create_table(database, name, attributes:list):
     if check_database_exists(database) == False:
         raise Exception("Database does exist")
-    else:
+    elif check_table_exists(name) == False:
         data = read_db(database)
         data[name] = {'attributes': attributes}
         write_db(database, data)
+    else:
+        raise Exception("Table already exists")
         
+
 def add_value_to_table(database, table,values:dict):
     if check_database_exists(database) == False:
         raise Exception("Database does not exist")
-    else:
+    elif check_table_exists(database, table):
         data = read_db(database)
         value_att = []
 
@@ -50,13 +60,36 @@ def add_value_to_table(database, table,values:dict):
             write_db(database, data)
         else:
             raise Exception(" Attributes do not match table")
+    else:
+        raise Exception("Table does not exist")
 
-add_value_to_table(
-    'test',
-    'PEOPLE',
-    {
-        'name':'Snehashish Laskar',
-        'age':15,
-        'gender':'male',
-    }
-)
+
+def where(database, table, conditions):
+    if check_database_exists(database) == False:
+        raise Exception("Database does not exist")
+    elif check_table_exists(database, table) == False:
+        raise Exception("Table does not exist")
+    else:
+        data = read_db(database)[table]
+        for i in data:
+            if i!= "attributes":
+                condition = True
+                for j in conditions:
+                    if data[i][j] != conditions[j]:
+                        condition = False
+                if condition:
+                    return data[i]
+    return {}
+
+def delete_condition(database, table, conditions):
+    data = read_db(database)
+    
+    data2 = where(database, table, conditions)
+
+    for i in data:
+        if data[table][i] == data2:
+            del data[table][i]
+
+    write_db(database, data)
+        
+delete_condition('test', 'PEOPLE', {'age':43})
