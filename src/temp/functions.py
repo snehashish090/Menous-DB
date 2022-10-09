@@ -1,9 +1,7 @@
-import json 
 import os
-from pathlib import Path
-from datetime import datetime
+path = ""
+import json
 
-path = os.path.join(Path(__file__).parent, "data")
 
 def read_db(database):
     with open(path+f"/{database}.json",'r') as file:
@@ -37,7 +35,7 @@ def check_table_exists(database, table):
 def create_table(database, name, attributes:list):
     if check_database_exists(database) == False:
         raise Exception("Database does exist")
-    elif check_table_exists(name) == False:
+    elif check_table_exists(database, name) == False:
         data = read_db(database)
         data[name] = {'attributes': attributes}
         write_db(database, data)
@@ -89,7 +87,16 @@ def delete_condition(database, table, conditions):
     for i in data:
         if data[table][i] == data2:
             del data[table][i]
-
+            break
     write_db(database, data)
         
-delete_condition('test', 'PEOPLE', {'age':43})
+def update_where(database, table, condition, value):
+    data = read_db(database)
+    element = where(database, table, condition)
+    print(element)
+    for i in value:
+        for j in element:
+            if i == j:
+                
+                print(element['add'])
+    print(element)

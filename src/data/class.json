@@ -1,0 +1,22 @@
+{
+    "students": {
+        "attributes": [
+            "name",
+            "age",
+            "email",
+            "grades"
+        ],
+        "2022-10-09 11:28:21.875568": {
+            "name": "Snehashish Laskar",
+            "age": 15,
+            "email": "snehashish.laskar@gmail.com",
+            "grades": []
+        },
+        "2022-10-09 11:28:30.020252": {
+            "name": "Snehashish Laskar",
+            "age": 15,
+            "email": "snehashish.laskar@gmail.com",
+            "grades": []
+        }
+    }
+}
