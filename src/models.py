@@ -6,7 +6,6 @@ from datetime import datetime
 path = os.path.join(Path(__file__).parent, "data")
 
 
-
 class dataBase:
 
     def __init__(self, name):
