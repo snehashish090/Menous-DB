@@ -1,14 +1,1 @@
-{
-    "people": {
-        "attributes": [
-            "name",
-            "age",
-            "gender"
-        ],
-        "2022-10-11 16:38:38.535913": {
-            "name": "Harvey Specter",
-            "age": 51,
-            "gender": "Male"
-        }
-    }
-}
+{}

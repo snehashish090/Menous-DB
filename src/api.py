@@ -132,7 +132,7 @@ def table():
             abort(403)
 
     elif request.method == 'DELETE':
-        if conditions not in request.json:
+        if "conditions" not in request.json:
             database =  request.headers.get('database')
             table = request.headers['table']
             db = dataBase(database)
@@ -154,7 +154,6 @@ def table():
             table = request.headers['table']
             db = dataBase(database)
             key = request.headers['key']
-            conditions = request.json
 
             if check_key(key):
                 if db.check_database_exists():

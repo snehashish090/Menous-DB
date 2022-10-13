@@ -5,12 +5,10 @@ from datetime import datetime
 
 path = os.path.join(Path(__file__).parent, "data")
 
-
 class dataBase:
 
     def __init__(self, name):
         self.name = name
-
 
     def read_db(self):
         with open(path+f"/{self.name}.json",'r') as file:
