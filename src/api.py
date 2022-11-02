@@ -22,9 +22,9 @@ def index():
                     data = database.read_db()
                     return jsonify(data)
                 else:
-                    abort(403)
+                    return 'Database does not exist'
             else:
-                abort(404)
+                abort(403)
         except Exception as ex:
             return str(ex)
     else:
@@ -75,6 +75,7 @@ def delDatabase():
         if check_key(key):
             database = dataBase(db)
             database.delete_database()
+            abort(200)
         else:
             abort(403)
     except Exception as ex:
@@ -110,6 +111,7 @@ def createTable():
         if check_key(key):
             db = dataBase(database)
             db.create_table(table, attributes)
+            abort(200)
         else:
             abort(403)
     except Exception as ex:
@@ -126,6 +128,7 @@ def insertInto():
         if check_key(key):
             db = dataBase(database)
             db.add_value_to_table(table, values)
+            abort(200)
         else:
             abort(403)
     except Exception as ex:
@@ -142,8 +145,8 @@ def selectWhere():
 
         if check_key(key):
             db = dataBase(database)
-            db.select_where(table, conditions)
-            abort(200)
+            ans = db.select_where(table, conditions)
+            return jsonify(ans)
         else:
             abort(403)
     except Exception as ex:
@@ -160,8 +163,8 @@ def select_columns():
 
         if check_key(key):
             db = dataBase(database)
-            db.select_columns(table, columns)
-            abort(200)
+            ans = db.select_columns(table, columns)
+            return jsonify(ans)
         else:
             abort(403)
     except Exception as ex:
@@ -179,12 +182,12 @@ def select_columns_where():
 
         if check_key(key):
             db = dataBase(database)
-            db.select_columns_where(table, columns, conditions)
-            abort(200)
+            ans = db.select_columns_where(table, columns, conditions)
+            return jsonify(ans)
         else:
             abort(403)
     except Exception as ex:
         return str(ex)
 
 if __name__ == '__main__':
-    app.run(debug = True, port = 80)
+    app.run(debug = True, port = 8000)

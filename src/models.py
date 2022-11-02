@@ -7,10 +7,18 @@ import os
 from pathlib import Path
 from datetime import datetime
 
-with open('config.json', 'r') as file:
-    path = os.path.join(json.load(file)['path'], 'data')
+if not os.path.exists("config.json"):
+    with open('config.json', 'w') as file:
+        json.dump({
+            'path':''
+        }, file)
+    raise Exception("edit path.json")
+
+with open("config.json", 'r') as file:
+    path  = os.path.join(json.load(file)['path'], 'data')
+
     if not os.path.exists(path):
-        os.mkdir(path)
+        os.makedirs(path)
 
 class dataBase:
 
