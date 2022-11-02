@@ -1,9 +1,16 @@
+# Author : Snehashish Laskar
+# Date   : 1st November 2022
+
+# Importing necessary modules
 import json 
 import os
 from pathlib import Path
 from datetime import datetime
 
-path = os.path.join(Path(__file__).parent, "data")
+with open('config.json', 'r') as file:
+    path = os.path.join(json.load(file)['path'], 'data')
+    if not os.path.exists(path):
+        os.mkdir(path)
 
 class dataBase:
 
@@ -11,15 +18,20 @@ class dataBase:
         self.name = name
 
     def read_db(self):
+        # Function used throughout the code base 
+        # to read from the database's lastest data
         with open(path+f"/{self.name}.json",'r') as file:
             data = json.load(file)
         return data
 
     def write_db(self, data):
+        # Function used throughout the code base to 
+        # write to the database
         with open(path+f"/{self.name}.json",'w') as file:
             json.dump(data, file, indent=4)
 
     def create_database(self):
+        # CREATE DATABASE name
         if os.path.exists(path+f"/{self.name}.json"):
             raise Exception("Database already exists")
         else:
@@ -31,15 +43,22 @@ class dataBase:
             return True
         else:
             return False
+    def delete_database(self):
+        if self.check_database_exists():
+            os.remove(path+f'/{self.name}.json')
+        else:
+            raise Exception("Database files not found")
 
-    def check_table_exists(self, table):
+
+    def check_table_exists(self, table:str):
         data = self.read_db()
         if table not in data.keys():
             return False
         else:
             return True
 
-    def create_table(self, table_name, attributes:list):
+    def create_table(self, table_name:str, attributes:list):
+        # CREATE TABLE IF NOT EXISTS table_name(attributes)
         if self.check_database_exists() == False:
             raise Exception("Database does exist")
         elif self.check_table_exists(table_name) == False:
@@ -67,7 +86,8 @@ class dataBase:
         else:
             raise Exception("Table does not exist")
 
-    def where(self, table, conditions):
+    # represents SELECT * FROM table WHERE condition
+    def select_where(self, table:str, conditions:dict):
         if self.check_database_exists() == False:
             raise Exception("Database does not exist")
         elif self.check_table_exists(table) == False:
@@ -84,16 +104,59 @@ class dataBase:
                         return data[i]
         return {}
 
-    def delete_condition(self, table, conditions):
-        data = self.read_db()
-        
-        data2 = self.where(table, conditions)
+    # represets SELECT cloumns FROM table
+    def select_columns(self, table:str, columns:list):
+        if self.check_database_exists() == False:
+            raise Exception("Database does not exist")
+        elif self.check_table_exists(table) == False:
+            raise Exception("Table does not exist")
+        else:
+            data = self.read_db()
+            Table = data[table]
+            ans = {}
+            for column in columns:
+                ans[column] = []
 
-        for i in data:
+            for i in Table:
+                if i  != "attributes":
+                    for j in Table[i]:
+                        if j in ans:
+                            ans[j].append(Table[i][j])
+            return ans
+
+    def select_columns_where(self, table:str, columns:list, conditions:dict):
+        if self.check_database_exists() == False:
+            raise Exception("Database does not exist")
+        elif self.check_table_exists(table) == False:
+            raise Exception("Table does not exist")
+        else:
+            columns = self.select_columns(table, columns)
+            result= {}
+            for i in columns:
+                result[i] =  []
+            print(columns)
+            index = 0
+            for i in conditions:
+                if conditions[i] in columns[i]:
+                    result[i].append(conditions[i])
+                    index = columns[i].index(conditions[i])
+                
+                for i in columns:
+                    result[i].append(columns[i][index])
+
+            return result
+
+
+    def delete_where(self, table, conditions:dict) -> str:
+        data = self.read_db()
+        data2 = self.select_where(table, conditions)
+
+        for i in data[table]:
             if data[table][i] == data2:
                 del data[table][i]
-                break
-        self.write_db(data)
+                self.write_db(data)
+                return 'Done'
+        raise Exception('Does not exist')
 
     def delete_table(self, table):
         if self.check_database_exists() == True:
@@ -106,10 +169,10 @@ class dataBase:
         else:
             raise Exception('Table does not exist')
         
-    def update_table(self, table, conditions, values):
+    def update_table(self, table:str, conditions:dict, values:dict):
         if self.check_database_exists() == True:
             if self.check_table_exists(table) == True:
-                var = self.where(table, conditions)
+                var = self.select_where(table, conditions)
                 data = self.read_db()
                 current= ""
                 for i in data[table]:
@@ -126,3 +189,4 @@ class dataBase:
                 raise ValueError("Could not find table")
         else:
             raise Exception("Databse does not exist")
+

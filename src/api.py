@@ -1,11 +1,16 @@
-from flask import *
+# Author : Snehashish Laskar
+# Date   : 1st November 2022
+
+# Importing necessary modules
+from flask import Flask, request, jsonify, abort, redirect
 from models import *
 from auth.auth import *
 
 app = Flask(__name__)
 
-@app.route('/database', methods=['GET', 'POST', 'DELETE'])
+@app.route('/read-db', methods=['GET'])
 def index():
+
     if request.method == 'GET':
         try:
             key = request.headers['key']
@@ -20,152 +25,166 @@ def index():
                     abort(403)
             else:
                 abort(404)
-        except:
-            abort(403)
-
-    elif request.method == "POST":
-        try:
-            key = request.headers['key']
-            db = request.headers['database']
-
-            if check_key(key):
-                database = dataBase(db)
-                if database.check_database_exists():
-                    abort(403)
-                else:
-                    database.create_database()
-                    return jsonify(database.read_db())
-            else:
-                abort(403)
         except Exception as ex:
             return str(ex)
+    else:
+        abort(403)
 
-    elif request.method == "DELETE":
-        try:
-            key = request.headers['key']
-            db = request.headers['database']
+@app.route('/create-db',methods = ['POST'])
+def createDb():
+    try:
+        key= request.headers['key']
+        db = request.headers['database']
 
-            if check_key(key):
-                database = dataBase(db)
-                if database.check_database_exists():
-                    db.delete_database()
-                    return redirect("/database")
-                else:
-                    return "database not found"
+        if check_key(key):
+            database = dataBase(db)
+            if database.check_database_exists():
+                return 'Error: database already exists'
             else:
-                abort(403)
-        except:
+                database.create_database()
+                return 'Successfully created database'
+
+        else:
             abort(403)
+    except Exception as ex:
+        return str(ex)
 
+@app.route('/check-db-exists', methods = ['GET'])
+def checkDbExists():
+    try:
+        key = request.headers['key']
+        db  = request.headers['database']
 
-@app.route('/table', methods=['GET', 'POST', 'PATCH', 'DELETE'])
-def table():
-
-    if request.method == "GET":
-        try:
-            key = request.headers['key']
-            table = request.headers.get('table')
-            db = request.headers.get('database')
-
-            if check_key(key):
-                database = dataBase(db)
-                if database.check_database_exists():
-                    if database.check_table_exists(table):
-                        if "conditions" not in request.json:
-                            table = database.read_db()[table]
-                            return jsonify(table)
-                        else:
-                            conditions = request.json['conditions']
-                            ans = database.where(table, conditions)
-                            print(ans)
-                            return jsonify(ans)
-                    else:
-                        abort(404)
-                else:
-                    abort(404)
+        if check_key(key):
+            database = dataBase(db)
+            if database.check_database_exists():
+                return 'True'
             else:
-                abort(403)
-        except Exception as e:
-            return jsonify(str(e))
+                return 'False'
+        else:
+            abort(403)
+    except Exception as ex:
+        return str(ex)
 
-    elif request.method == 'POST':
-        
-        headers = request.headers
-        key = headers['key']
-        table = request.headers['table']
+@app.route('/del-database', methods = ['DELETE'])
+def delDatabase():
+    try:
+        key = request.headers['key']
+        db = request.headers['database']
+
+        if check_key(key):
+            database = dataBase(db)
+            database.delete_database()
+        else:
+            abort(403)
+    except Exception as ex:
+        return str(ex)
+
+@app.route('/check-table-exists', methods=['GET'])
+def checkTableExists():
+    try:
+        key = request.headers['key']
         database = request.headers['database']
-        values = request.json
+        table = request.headers['table']
 
         if check_key(key):
             db = dataBase(database)
-            if db.check_database_exists():
-                if db.check_table_exists(table):
-                    db.add_value_to_table(table, values)
-                    return jsonify(db.read_db())
-                else:
-                    return ("Table Does Not Exist")
+            if db.check_table_exists(table):
+                return 'True'
             else:
-                return ("Database does Not Exist")
+                return 'False'
         else:
-            return "Key Invalid"
+            abort(403)
 
-    elif request.method == "PATCH":
+    except Exception as ex:
+        return str(ex)
 
-        headers = request.headers
-        key = headers['key']
-        table = request.headers['table']
+@app.route('/create-table', methods=['POST'])
+def createTable():
+    try:
+        key = request.headers['key']
         database = request.headers['database']
-        conditions = request.json['conditions']
+        table = request.headers['table']
+        attributes = request.json['attributes']
+
+        if check_key(key):
+            db = dataBase(database)
+            db.create_table(table, attributes)
+        else:
+            abort(403)
+    except Exception as ex:
+        return str(ex)
+
+@app.route('/insert-into-table', methods = ['POST'])
+def insertInto():
+    try:
+        key = request.headers['key']
+        database  = request.headers['database']
+        table = request.headers['table']
         values = request.json['values']
 
         if check_key(key):
             db = dataBase(database)
-            if db.check_database_exists():
-                if db.check_table_exists(table):
-                    db.update_table(table, conditions, values)
-                    return jsonify(db.read_db())
-                else:
-                    abort(404)
-            else:
-                abort(404)
+            db.add_value_to_table(table, values)
         else:
             abort(403)
+    except Exception as ex:
+        return str(ex)
 
-    elif request.method == 'DELETE':
-        if "conditions" not in request.json:
-            database =  request.headers.get('database')
-            table = request.headers['table']
+
+@app.route('/select-where', methods=['GET'])
+def selectWhere():
+    try:
+        key = request.headers['key']
+        database = request.headers['database']
+        table = request.headers['table']
+        conditions = request.json['conditions']
+
+        if check_key(key):
             db = dataBase(database)
-            key = request.headers['key']
-            
-            if check_key(key):
-                if db.check_database_exists():
-                    if db.check_table_exists(table):
-                        db.delete_table(table)
-                        return jsonify(db.read_db())
-                    else:
-                        abort(404)
-                else:
-                    abort(404)
-            else:
-                abort(403)
+            db.select_where(table, conditions)
+            abort(200)
         else:
-            database =  request.headers.get('database')
-            table = request.headers['table']
-            db = dataBase(database)
-            key = request.headers['key']
+            abort(403)
+    except Exception as ex:
+        return str(ex)
 
-            if check_key(key):
-                if db.check_database_exists():
-                    if db.check_table_exists(table):
-                        db.delete_table(table)
-                        return jsonify(db.read_db())
-                    else:
-                        abort(404)
-                else:
-                    abort(404)
-            else:
-                abort(403)
+
+@app.route('/select-columns', methods=['GET'])
+def select_columns():
+    try:
+        key = request.headers['key']
+        database = request.headers['database']
+        table = request.headers['table']
+        columns = request.json['columns']
+
+        if check_key(key):
+            db = dataBase(database)
+            db.select_columns(table, columns)
+            abort(200)
+        else:
+            abort(403)
+    except Exception as ex:
+        return str(ex)
+
+
+@app.route('/select-columns-where', methods=['GET'])
+def select_columns_where():
+    try:
+        key = request.headers['key']
+        database = request.headers['database']
+        table = request.headers['table']
+        columns = request.json['columns']
+        conditions = request.json['conditions']
+
+        if check_key(key):
+            db = dataBase(database)
+            db.select_columns_where(table, columns, conditions)
+            abort(200)
+        else:
+            abort(403)
+    except Exception as ex:
+        return str(ex)
 
 if __name__ == '__main__':
-    app.run(debug=True, port = 8000)
+    app.run(debug = True, port = 80)
