@@ -1,6 +1,6 @@
-# Custom-Database
+# Menous DB
 
-## Custom Database Features:
+## MenousDB Features:
 
 1. SQL version
 2. No SQL (JSON) Version

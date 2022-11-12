@@ -1,0 +1,9 @@
+{
+    "new": {
+        "attributes": [
+            "title",
+            "author",
+            "release"
+        ]
+    }
+}

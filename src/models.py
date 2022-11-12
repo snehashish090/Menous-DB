@@ -12,7 +12,7 @@ if not os.path.exists("config.json"):
         json.dump({
             'path':''
         }, file)
-    raise Exception("edit path.json")
+    raise Exception("edit config.json")
 
 with open("config.json", 'r') as file:
     path  = os.path.join(json.load(file)['path'], 'data')
