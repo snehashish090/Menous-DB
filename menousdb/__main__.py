@@ -15,10 +15,10 @@ class MenousDB():
             raise Exception('No database')
 
         Headers = {
-            'key':self.key,
-            'database':self.database
+            'key': self.key,
+            'database': self.database
         }
-        ans = req.get(self.url+'read-db', headers = Headers)
+        ans = req.get(self.url + 'read-db', headers=Headers)
         try:
             return ans.json()
         except:
@@ -31,13 +31,13 @@ class MenousDB():
         try:
 
             Headers = {
-                'key':self.key,
-                'database':self.database
+                'key': self.key,
+                'database': self.database
             }
 
-            ans = req.post(self.url+'create-db', headers=Headers)
+            ans = req.post(self.url + 'create-db', headers=Headers)
             return ans.text
-            
+
         except Exception as ex:
             raise ex
 
@@ -47,13 +47,13 @@ class MenousDB():
         try:
 
             Headers = {
-                'key':self.key,
-                'database':self.database
+                'key': self.key,
+                'database': self.database
             }
 
-            ans = req.delete(self.url+'del-database', headers=Headers)
+            ans = req.delete(self.url + 'del-database', headers=Headers)
             return ans.text
-            
+
         except Exception as ex:
             raise ex
 
@@ -64,25 +64,25 @@ class MenousDB():
         try:
 
             Headers = {
-                'key':self.key,
-                'database':self.database
+                'key': self.key,
+                'database': self.database
             }
 
-            ans = req.get(self.url+'check-db-exists', headers=Headers)
+            ans = req.get(self.url + 'check-db-exists', headers=Headers)
             return ans.text
-            
+
         except Exception as ex:
             raise ex
-            
+
     def createTable(self, table):
         if self.database == None:
             raise Exception('No database')
         try:
 
             Headers = {
-                'key':self.key,
-                'database':self.database,
-                'table':table
+                'key': self.key,
+                'database': self.database,
+                'table': table
             }
 
             Json = {
@@ -93,28 +93,29 @@ class MenousDB():
                 ]
             }
 
-            ans = req.post(self.url+'create-table', headers=Headers, json=Json)
+            ans = req.post(self.url + 'create-table', headers=Headers, json=Json)
             return ans.text
-            
+
         except Exception as ex:
             raise ex
+
     def __str__(self) -> str:
         return self.database
-           
+
     def checkTableExists(self, table):
         if self.database == None:
             raise Exception('No database')
         try:
 
             Headers = {
-                'key':self.key,
-                'database':self.database,
-                'table':table
+                'key': self.key,
+                'database': self.database,
+                'table': table
             }
 
-            ans = req.get(self.url+'check-table-exists', headers=Headers)
+            ans = req.get(self.url + 'check-table-exists', headers=Headers)
             return ans.text
-            
+
         except Exception as ex:
             raise ex
 
@@ -124,18 +125,18 @@ class MenousDB():
         try:
 
             Headers = {
-                'key':self.key,
-                'database':self.database,
-                'table':table
+                'key': self.key,
+                'database': self.database,
+                'table': table
             }
 
             Json = {
-                'values':values,
+                'values': values,
             }
 
-            ans = req.post(self.url+'inserts-into-table', headers=Headers, json = Json)
+            ans = req.post(self.url + 'insert-into-table', headers=Headers, json=Json)
             return ans.text
-            
+
         except Exception as ex:
             raise ex
 
@@ -145,44 +146,44 @@ class MenousDB():
         try:
 
             Headers = {
-                'key':self.key,
-                'database':self.database,
-                'table':table
+                'key': self.key,
+                'database': self.database,
+                'table': table
             }
 
             Json = {
-                'conditions':conditions
+                'conditions': conditions
             }
 
-            ans = req.get(self.url+'select-where', headers=Headers, json = Json)
+            ans = req.get(self.url + 'select-where', headers=Headers, json=Json)
             try:
                 return ans.json()
             except:
                 return ans.text
-            
+
         except Exception as ex:
             raise ex
 
-    def selectColumns(self,table, columns):
+    def selectColumns(self, table, columns):
         if self.database == None:
             raise Exception('No database')
         try:
 
             Headers = {
-                'key':self.key,
-                'database':self.database,
-                'table':table,
+                'key': self.key,
+                'database': self.database,
+                'table': table,
             }
             Json = {
                 'columns': columns
             }
 
-            ans = req.get(self.url+'select-columns', headers=Headers, json = Json)
+            ans = req.get(self.url + 'select-columns', headers=Headers, json=Json)
             try:
                 return ans.json()
             except:
-                return ans.text    
-            
+                return ans.text
+
         except Exception as ex:
             raise ex
 
@@ -192,24 +193,29 @@ class MenousDB():
         try:
 
             Headers = {
-                'key':self.key,
-                'database':self.database,
-                'table':table,
+                'key': self.key,
+                'database': self.database,
+                'table': table,
             }
             Json = {
                 'columns': columns,
-                'conditions':conditions,
+                'conditions': conditions,
             }
 
-            ans = req.get(self.url+'select-columns-where', headers=Headers, json = Json)
+            ans = req.get(self.url + 'select-columns-where', headers=Headers, json=Json)
             try:
                 return ans.json()
             except:
-                return ans.text    
-            
+                return ans.text
+
         except Exception as ex:
-            raise ex 
+            raise ex
 
-
+x = MenousDB(
+    'http://127.0.0.1:8000/',
+    'dh8pI_HmXuaLlPMu7w9Luw',
+    'passenger'
+)
+x.createDb()
 
 

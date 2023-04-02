@@ -1,4 +1,4 @@
-ß ={
+{
  "a": "01100001",
  "b": "01100010",
  "c": "01100011",
@@ -37,10 +37,3 @@
  "9": "00111001",
  "0": "00110000"
 }
-
-def encrypt(string:str):
-    for i in ß:
-        string = string.replace(i, ß[i])
-    return string
-
-print(encrypt('a'))

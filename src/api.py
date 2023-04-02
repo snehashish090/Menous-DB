@@ -6,6 +6,21 @@ from flask import Flask, request, jsonify, abort, redirect
 from models import *
 from auth.auth import *
 
+"""
+methods included:
+ 
+1: read-db (key, database)
+2: create-db (key, database)
+3: check-db-exists (key, database)
+4: del-database (key database)
+5: check-table-exists (key, database, table)
+6: create-table (key, database, table, attributes)
+7: inser-into-table (key, database, table, values)
+8: select-where (key, database, table, conditions)
+9: select-columns (key, database, table, columns)
+10: select-columns-where (key, database, table, columns, conditions)
+11: 
+"""
 app = Flask(__name__)
 
 @app.route('/read-db', methods=['GET'])
@@ -188,6 +203,65 @@ def select_columns_where():
             abort(403)
     except Exception as ex:
         return str(ex)
+    
 
+@app.route('/delete-where', methods = ['DELETE'])
+def delete_where():
+    try:
+        key = request.headers['key']
+        database = request.headers['database']
+        table = request.headers['table']
+        conditions = request.json['conditions']
+
+        if check_key(key):
+            db = dataBase(database)
+            ans = db.delete_where(table, conditions)
+            return jsonify(ans)
+        else:
+            abort(403)
+    except Exception as ex:
+        return str(ex)
+    
+
+@app.route('/delete-table', methods = ['DELETE'])
+def delete_table():
+
+    try:
+        key = request.headers['key']
+        database = request.headers['database']
+        table = request.headers['table']
+
+        if check_key(key):
+            db = dataBase(database)
+            ans = db.delete_where(table)
+            return jsonify(ans)
+        else:
+            abort(403)
+
+    except Exception as ex:
+        return jsonify(ex)
+    
+
+@app.route('/update-table' , methods=['POST'])
+def update_table():
+
+    try:
+        key = request.headers['key']
+        database = request.headers['database']
+        table = request.headers['table']
+        conditions = request.json['conditions']
+        values = request.json['values']
+
+        if check_key(key):
+            db = database(database)
+            ans = db.update_table(table, conditions, values)
+            return jsonify(ans)
+        else:
+            abort(403)
+
+    except Exception as ex:
+        return jsonify(ex)
+
+    
 if __name__ == '__main__':
-    app.run(debug = True, port =8888)
+    app.run(debug=True)
