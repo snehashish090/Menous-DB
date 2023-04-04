@@ -1,26 +1,33 @@
 # Author : Snehashish Laskar
 # Date   : 1st November 2022
+# Version : 0.1.0
+# Copyright (C) Snehashish Laskar 2023
+# LICENSE: MIT OPen Source Software License
 
 # Importing necessary modules
-from flask import Flask, request, jsonify, abort, redirect
+from flask import Flask, request, jsonify, abort
 from models import *
 from auth.auth import *
 
 """
 methods included:
  
-1: read-db (key, database)
-2: create-db (key, database)
-3: check-db-exists (key, database)
-4: del-database (key database)
-5: check-table-exists (key, database, table)
-6: create-table (key, database, table, attributes)
-7: inser-into-table (key, database, table, values)
-8: select-where (key, database, table, conditions)
-9: select-columns (key, database, table, columns)
-10: select-columns-where (key, database, table, columns, conditions)
-11: 
+1: read-db GET 
+2: create-db POST
+3: check-db-exists GET
+4: del-database DELETE
+5: check-table-exists GET
+6: create-table POST
+7: insert-into-table POST
+8: select-where GET
+9: select-columns GET
+10: select-columns-where GET
+11: delete-where DELETE
+12: delete-table DELETE
+13: update-table POST
+
 """
+
 app = Flask(__name__)
 
 @app.route('/read-db', methods=['GET'])
@@ -233,7 +240,7 @@ def delete_table():
 
         if check_key(key):
             db = dataBase(database)
-            ans = db.delete_where(table)
+            ans = db.delete_table(table)
             return jsonify(ans)
         else:
             abort(403)
@@ -253,7 +260,7 @@ def update_table():
         values = request.json['values']
 
         if check_key(key):
-            db = database(database)
+            db = dataBase(database)
             ans = db.update_table(table, conditions, values)
             return jsonify(ans)
         else:
@@ -264,4 +271,4 @@ def update_table():
 
     
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port = 5555)

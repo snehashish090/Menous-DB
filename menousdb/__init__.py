@@ -1,8 +1,37 @@
-# Author : Snehamoy Laskar (pro programmer)
+# Author : Snehashish Laskar
+# Date Stated : 1st November 2022
+# Version : 0.1.0
+# Copyright (C) Snehashish Laskar 2023
+# LICENSE: MIT OPen Source Software License
+
+# This is a python module for interacting with the
+# MenousDb database. To actually use the database,
+# You must download it from github link given below:
+# Link :
+
+# Import the only necessary module
 import requests as req
 
+"""
+methods included:
 
-class MenousDB():
+1: readDB (key, database)
+2: create-db (key, database)
+3: check-db-exists (key, database)
+4: del-database (key database)
+5: check-table-exists (key, database, table)
+6: create-table (key, database, table, attributes)
+7: insert-into-table (key, database, table, values)
+8: select-where (key, database, table, conditions)
+9: select-columns (key, database, table, columns)
+10: select-columns-where (key, database, table, columns, conditions)
+11: delete-where (table, conditions)
+12: delete-table (table)
+13: update-table (table, conditions, values)
+
+"""
+
+class MenousDB:
 
     def __init__(self, url, key, database):
         self.url = url
@@ -74,7 +103,7 @@ class MenousDB():
         except Exception as ex:
             raise ex
 
-    def createTable(self, table):
+    def createTable(self, table:str, attributes:list):
         if self.database == None:
             raise Exception('No database')
         try:
@@ -86,11 +115,7 @@ class MenousDB():
             }
 
             Json = {
-                'attributes': [
-                    'title',
-                    'author',
-                    'release'
-                ]
+                'attributes': attributes
             }
 
             ans = req.post(self.url + 'create-table', headers=Headers, json=Json)
@@ -211,11 +236,60 @@ class MenousDB():
         except Exception as ex:
             raise ex
 
-x = MenousDB(
-    'http://127.0.0.1:8000/',
-    'dh8pI_HmXuaLlPMu7w9Luw',
-    'passenger'
-)
-x.createDb()
+    def delete_where(self, table, conditions):
+        if self.database == None:
+            raise Exception('No Database')
+        try:
+            Headers = {
+                'key': self.key,
+                'database': self.database,
+                'table': table,
+            }
+            Json = {
+                'conditions':conditions
+            }
+
+            ans = req.delete(self.url+"delete-where", headers = Headers, json = Json)
+            try:
+                return ans.json()
+            except:
+                return ans.text
+        except Exception as ex:
+            return ex
+
+    def delete_table(self, table):
+            if self.database == None:
+                raise Exception('No Database')
+            try:
+                Headers = {
+                    'key': self.key,
+                    'database': self.database,
+                    'table': table,
+                }
+                ans = req.delete(self.url + "delete-table", headers=Headers)
+                try:
+                    return ans.json()
+                except:
+                    return ans.text
+            except Exception as ex:
+                return ex
 
 
+    def update_table(self, table, conditions, values):
+        try:
+            Headers = {
+                'key': self.key,
+                'database': self.database,
+                'table': table,
+            }
+            Json = {
+                'conditions':conditions,
+                'values':values
+            }
+            ans = req.post(self.url+'update-table', headers=Headers, json = Json)
+            try:
+                return ans.json()
+            except:
+                return ans.text
+        except Exception as ex:
+            return ex
