@@ -33,6 +33,11 @@ methods included:
 
 class MenousDB:
 
+    """
+    To interact with the database, we need to create a
+    and instance of the MenoudDb class. This class helps
+    """
+
     def __init__(self, url, key, database):
         self.url = url
         self.key = key
@@ -52,6 +57,7 @@ class MenousDB:
             return ans.json()
         except:
             return ans.text
+
 
     def createDb(self):
 

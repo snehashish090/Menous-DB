@@ -197,3 +197,4 @@ class dataBase:
                 raise ValueError("Could not find table")
         else:
             raise Exception("Databse does not exist")
+
