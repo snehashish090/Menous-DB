@@ -7,7 +7,7 @@
 # Importing necessary modules
 from flask import Flask, request, jsonify, abort
 from models import *
-from auth.auth import *
+from auth import *
 
 """
 methods included:
@@ -269,6 +269,18 @@ def update_table():
     except Exception as ex:
         return jsonify(ex)
 
+
+@app.route('/get-databases', methods=['GET'])
+def getDatabases():
+    try:
+        key = request.headers['key']
+        if check_key(key):
+            data = get_databases()
+            return jsonify(data)
+        else:
+            abort(403)
+    except Exception as ex:
+        return jsonify(ex)
     
 if __name__ == '__main__':
-    app.run(debug=True, port = 5555)
+    app.run(debug=True, port = 5555, host="0.0.0.0")

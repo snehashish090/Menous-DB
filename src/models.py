@@ -6,20 +6,35 @@ import json
 import os
 from pathlib import Path
 from datetime import datetime
+import random
+import sys
 
-if not os.path.exists("config.json"):
-    with open('config.json', 'w') as file:
-        json.dump({
-            'path': ''
-        }, file)
-    raise Exception("edit config.json")
+# if not os.path.exists("config.json"):
+#     with open('config.json', 'w') as file:
+#         json.dump({
+#             'path': ''
+#         }, file)
+#     raise Exception("edit config.json")
 
-with open("config.json", 'r') as file:
-    path = os.path.join(json.load(file)['path'], 'data')
+# with open("config.json", 'r') as file:
+#     path = os.path.join(json.load(file)['path'], 'data')
 
-    if not os.path.exists(path):
-        os.makedirs(path)
+#     if not os.path.exists(path):
+#         os.makedirs(path)
 
+if sys.platform == "darwin":
+    if not os.path.exists("/Library/Caches/.menousdb"):
+        os.mkdir("/Library/Caches/.menousdb")
+    if not os.path.exists("/Library/Caches/.menousdb/data"):
+        os.mkdir("/Library/Caches/.menousdb/data")
+    path = "/Library/Caches/.menousdb/data"
+
+elif sys.platform == "win32":
+    if not os.path.exists(os.getenv("APPDATA")+"/MenoudDb"):
+        os.mkdir(os.getenv("APPDATA")+"/MenoudDb")
+    if not os.path.exists(os.getenv("APPDATA")+"/MenoudDb"+"/data"):
+        os.mkdir(os.getenv("APPDATA")+"/MenoudDb/data")
+    path = os.getenv("APPDATA")+"/MenoudDb"+"/data"
 
 class dataBase:
 
@@ -88,7 +103,7 @@ class dataBase:
                 value_att.append(i)
 
             if value_att == data[table]['attributes']:
-                data[table][str(datetime.now())] = values
+                data[table][random.randint(10000, 100000)] = values
                 self.write_db(data)
             else:
                 raise Exception(" Attributes do not match table")
@@ -198,3 +213,11 @@ class dataBase:
         else:
             raise Exception("Databse does not exist")
 
+    
+def get_databases():
+    
+    databases = []
+    for i in os.listdir(path):
+        if ".json" in i:
+            databases.append(i.replace(".json", ""))
+    return databases

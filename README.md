@@ -14,3 +14,6 @@
 
 
 ## Installation
+Install official Github release for MacOS or Windows
+or build using python by running the api.py file
+

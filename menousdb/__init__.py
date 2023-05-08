@@ -169,7 +169,7 @@ class MenousDB:
             return ans.text
 
         except Exception as ex:
-            raise ex
+            print(ex)
 
     def selectWhere(self, table, conditions):
         if self.database == None:
@@ -297,5 +297,18 @@ class MenousDB:
                 return ans.json()
             except:
                 return ans.text
+        except Exception as ex:
+            return ex
+        
+    def get_databases(self):
+        try:
+            Headers = {
+                'key': self.key,
+            }
+            ans = req.get(self.url+'get-databases', headers=Headers)
+            try:
+                return ans.json()
+            except:
+                return ans.text()
         except Exception as ex:
             return ex
