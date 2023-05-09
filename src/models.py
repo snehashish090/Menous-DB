@@ -9,23 +9,12 @@ from datetime import datetime
 import random
 import sys
 
-# if not os.path.exists("config.json"):
-#     with open('config.json', 'w') as file:
-#         json.dump({
-#             'path': ''
-#         }, file)
-#     raise Exception("edit config.json")
-
-# with open("config.json", 'r') as file:
-#     path = os.path.join(json.load(file)['path'], 'data')
-
-#     if not os.path.exists(path):
-#         os.makedirs(path)
-
 if sys.platform == "darwin":
     if not os.path.exists("/Library/Caches/.menousdb"):
         os.mkdir("/Library/Caches/.menousdb")
     if not os.path.exists("/Library/Caches/.menousdb/data"):
+        os.mkdir("/Library/Caches/.menousdb/data")
+    if not os.path.exists("/Library/Caches/.menousdb/authdata"):
         os.mkdir("/Library/Caches/.menousdb/data")
     path = "/Library/Caches/.menousdb/data"
 
@@ -221,3 +210,4 @@ def get_databases():
         if ".json" in i:
             databases.append(i.replace(".json", ""))
     return databases
+

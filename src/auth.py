@@ -10,7 +10,14 @@ if sys.platform == "darwin":
         os.mkdir("/Library/Caches/.menousdb")
     if not os.path.exists("/Library/Caches/.menousdb/authdata"):
         os.mkdir("/Library/Caches/.menousdb/authdata")
+    if not os.path.exists("/Library/Caches/.menousdb/authdata/keys.json"):
+        with open("/Library/Caches/.menousdb/authdata/keys.json", "w") as file:
+            json.dump([], file)
+    if not os.path.exists("/Library/Caches/.menousdb/authdata/login.json"):
+        with open("/Library/Caches/.menousdb/authdata/login.json", "w") as file:
+            json.dump({}, file)
     path = "/Library/Caches/.menousdb/authdata"
+
 
 elif sys.platform == "win32":
     if not os.path.exists(os.getenv("APPDATA")+"\\MenoudDb"):
@@ -40,3 +47,29 @@ def generate_key():
         json.dump(data, file, indent=4)
 
     return key
+
+def signup():
+    with open(path + "/login.json", "r") as file:
+        data = json.load(file)
+    
+    while True:
+        print("~~~~~~~~~~~~~~~~~~~~~~WELCOME TO MENOUSDB~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        uname = input("ENTER A USERNAME: ")
+        pw = getpass.getpass("ENTER PASSWORD: ")
+        confirm = getpass.getpass("RE-ENTER PASSWORD: ")
+        if pw == confirm:
+            data[uname] = [pw, generate_key()]
+            with open(path + "/login.json", "w") as file:
+                json.dump(data, file, indent=4)
+            exit()
+        else:
+            print("ERROR! PASSWORDS DO NOT MATCH! TRY AGAIN!\n")
+
+def checksignup():
+    with open(path + "/login.json", "r") as file:
+        data = json.load(file)
+
+    if data == {}:
+        signup()
+
+checksignup()
