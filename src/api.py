@@ -286,4 +286,6 @@ def getDatabases():
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == '--signup':
         signup()
-    app.run(debug=True, port = 5555, host="0.0.0.0")
+    elif len(sys.argv) > 1 and sys.argv[1] == '--showkey':
+        getuserkey()
+    app.run(port = 5555, host="0.0.0.0")
