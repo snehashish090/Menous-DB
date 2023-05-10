@@ -1,0 +1,69 @@
+Metadata-Version: 2.1
+Name: menousdb
+Version: 0.1.2
+Summary: A SDK for Menous DB
+Author: Snehashish Laskar
+Author-email: snehashish.laskar@gmail.com
+License: 
+        MIT License
+        
+        Copyright (c) 2022 Snehashish Laskar
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+        
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: Unix
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Description-Content-Type: text/markdown
+
+
+# Menous DB
+
+### Methods included:
+
+1: readDB (key, database)
+
+2: create-db (key, database)
+
+3: check-db-exists (key, database)
+
+4: del-database (key database)
+
+5: check-table-exists (key, database, table)
+
+6: create-table (key, database, table, attributes)
+
+7: insert-into-table (key, database, table, values)
+
+8: select-where (key, database, table, conditions)
+
+9: select-columns (key, database, table, columns)
+
+10: select-columns-where (key, database, table, columns, conditions)
+
+11: delete-where (table, conditions)
+
+12: delete-table (table)
+
+13: update-table (table, conditions, values)
+

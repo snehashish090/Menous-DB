@@ -114,6 +114,7 @@ class dataBase:
         elif self.check_table_exists(table) == False:
             raise Exception("Table does not exist")
         else:
+            answers=[]
             data = self.read_db()[table]
             for i in data:
                 if i != "attributes":
@@ -122,8 +123,8 @@ class dataBase:
                         if data[i][j] != conditions[j]:
                             condition = False
                     if condition:
-                        return data[i]
-        return {}
+                        answers.append(data[i])
+            return answers
 
     # represets SELECT cloumns FROM table
     def select_columns(self, table: str, columns: list):
@@ -169,14 +170,14 @@ class dataBase:
 
     def delete_where(self, table, conditions: dict) -> str:
         data = self.read_db()
-        data2 = self.select_where(table, conditions)
-
-        for i in data[table]:
-            if data[table][i] == data2:
-                del data[table][i]
-                self.write_db(data)
-                return 'Done'
-        raise Exception('Does not exist')
+        for data2 in self.select_where(table, conditions):
+            print(data2)
+            for i in data[table]:
+                if data[table][i] == data2:
+                    del data[table][i]
+                    self.write_db(data)
+                    break
+            
 
     def delete_table(self, table):
         if self.check_database_exists() == True:
@@ -192,19 +193,19 @@ class dataBase:
     def update_table(self, table: str, conditions: dict, values: dict):
         if self.check_database_exists() == True:
             if self.check_table_exists(table) == True:
-                var = self.select_where(table, conditions)
-                data = self.read_db()
-                current = ""
-                for i in data[table]:
-                    if data[table][i] == var:
-                        current = i
+                for var in self.select_where(table, conditions):
+                    data = self.read_db()
+                    current = ""
+                    for i in data[table]:
+                        if data[table][i] == var:
+                            current = i
 
-                for i in var:
-                    for j in values:
-                        if i == j:
-                            var[i] = values[j]
-                data[table][current] = var
-                self.write_db(data)
+                    for i in var:
+                        for j in values:
+                            if i == j:
+                                var[i] = values[j]
+                    data[table][current] = var
+                    self.write_db(data)
             else:
                 raise ValueError("Could not find table")
         else:

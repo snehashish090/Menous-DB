@@ -284,8 +284,14 @@ def getDatabases():
     
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1 and sys.argv[1] == '--signup':
+    if len(sys.argv) > 1 and sys.argv[1] == '--newuser':
         signup()
-    elif len(sys.argv) > 1 and sys.argv[1] == '--showkey':
+    elif len(sys.argv) > 1 and sys.argv[1] == '--key':
         getuserkey()
+    elif len(sys.argv) > 1 and (sys.argv[1] == '--help' or \
+                                sys.argv[1] == '-h') :
+        print("Welcome to Menous Db")
+        print("Menous db will run on port 5555")
+        print("To create a new user execute menousdb --newuser")
+        print("To get your API key execute menousdb --key")
     app.run(port = 5555, host="0.0.0.0")

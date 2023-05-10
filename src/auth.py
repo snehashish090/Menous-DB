@@ -19,6 +19,7 @@ if sys.platform == "darwin":
         with open("/Library/Caches/.menousdb/authdata/login.json", "w") as file:
             json.dump({}, file)
     path = "/Library/Caches/.menousdb/authdata"
+    
 elif sys.platform == "win32":
     if not os.path.exists(os.getenv("APPDATA")+"\\MenoudDb"):
         os.mkdir(os.getenv("APPDATA")+"\\MenoudDb")
