@@ -33,6 +33,20 @@ elif sys.platform == "win32":
     if not os.path.exists(os.path.join(authpath,"login.json")):
         with open(os.path.join(authpath,"login.json"),"w") as file:
             json.dump({},file)
+else:
+    if not os.path.exists("/usr/local/bin/menousdb"):
+        os.mkdir("/usr/local/bin/menousdb")
+    if not os.path.exists("/usr/local/bin/menousdb/data"):
+        os.mkdir("/usr/local/bin/menousdb/data")
+    if not os.path.exists("/usr/local/bin/menousdb/authdata"):
+        os.mkdir("/usr/local/bin/menousdb/authdata")
+    path="/usr/local/bin/menousdb/data"
+    if not os.path.exists(os.path.join(path,"keys.json")):
+        with open(os.path.join(path,"keys.json"),"w") as file:
+            json.dump([],file)
+    if not os.path.exists(os.path.join(path,"login.json")):
+        with open(os.path.join(path,"login.json"),"w") as file:
+            json.dump({},file)
 class dataBase:
 
     def __init__(self, name):
