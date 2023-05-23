@@ -121,5 +121,12 @@ def getuserkey():
         else:
             break
         
-
-
+def Login(username, password):
+    Path = path
+    with open(Path + "/login.json", 'r') as file:
+        data = json.load(file)
+        for i in data:
+            if i == username and data[i][0] == password:
+                return data[i][1]
+        return False
+    

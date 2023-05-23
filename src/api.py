@@ -282,6 +282,32 @@ def getDatabases():
     except Exception as ex:
         return jsonify(ex)
     
+@app.route("/check-login", methods=["GET"])
+def check_login():
+    try:
+        uname = request.headers['username']
+        pw = request.headers['password']
+        if Login(uname,pw) != False:
+            return Login(uname,pw)
+        else:
+            return "Inccorect"
+    except Exception as ex:
+        return jsonify(ex)
+
+def checkCredentials(uname,pw):
+    db=dataBase("authdata")
+    table=db.read_db()['vaccinator_auth']
+    for i in table:
+        if i != "attributes":
+            if table[i]['username'] == uname and table[i]['password'] == pw:
+                return True
+    return False
+
+@app.route('/verify/<username>/<password>', methods=['GET'])
+def checkCreds(username, password):
+    if checkCredentials(username, password):
+        return 'True'
+    return 'False'
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == '--newuser':
@@ -294,4 +320,22 @@ if __name__ == '__main__':
         print("Menous db will run on port 5555")
         print("To create a new user execute menousdb --newuser")
         print("To get your API key execute menousdb --key")
-    app.run(port = 5555, host="0.0.0.0")
+    elif "--port" in sys.argv:
+        index = sys.argv.index("--port")
+        app.run(port = sys.argv[index+1], host="0.0.0.0")
+    elif len(sys.argv) > 1 and (sys.argv[1] == "--start" or sys.argv[1] == "--run"):
+        app.run(port = 5555, host="0.0.0.0")
+    print("""
+███╗░░░███╗███████╗███╗░░██╗░█████╗░██╗░░░██╗░██████╗  ██████╗░██████╗░
+████╗░████║██╔════╝████╗░██║██╔══██╗██║░░░██║██╔════╝  ██╔══██╗██╔══██╗
+██╔████╔██║█████╗░░██╔██╗██║██║░░██║██║░░░██║╚█████╗░  ██║░░██║██████╦╝
+██║╚██╔╝██║██╔══╝░░██║╚████║██║░░██║██║░░░██║░╚═══██╗  ██║░░██║██╔══██╗
+██║░╚═╝░██║███████╗██║░╚███║╚█████╔╝╚██████╔╝██████╔╝  ██████╔╝██████╦╝
+╚═╝░░░░░╚═╝╚══════╝╚═╝░░╚══╝░╚════╝░░╚═════╝░╚═════╝░  ╚═════╝░╚═════╝░                                                                                   
+    """)
+    print("To start the database run --start")
+    print("Menous db will run on port 5555")
+    print("If you wish it to it will run on any port by using --port PORT")
+    print("To create a new user execute menousdb --newuser")
+    print("To get your API key execute menousdb --key\n")
+
