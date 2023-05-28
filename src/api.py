@@ -128,8 +128,8 @@ def createTable():
         key = request.headers['key']
         database = request.headers['database']
         table = request.headers['table']
+        print(key,database,table)
         attributes = request.json['attributes']
-
         if check_key(key):
             db = dataBase(database)
             db.create_table(table, attributes)
