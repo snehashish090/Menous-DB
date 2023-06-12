@@ -49,12 +49,6 @@ else:
     if not os.path.exists(os.path.join(path,"login.json")):
         with open(os.path.join(path,"login.json"),"w") as file:
             json.dump({},file)
-#elif sys.platform == "win32":
-#     if not os.path.exists(os.getenv("APPDATA")+"\\MenoudDb"):
-#         os.mkdir(os.getenv("APPDATA")+"\\MenoudDb")
-#     if not os.path.exists(os.getenv("APPDATA")+"\\MenoudDb"+"\\authdata"):
-#         os.mkdir(os.getenv("APPDATA")+"\\MenoudDb\\authdata")
-#     path = os.getenv("APPDATA")+"\\MenoudDb"+"\\authdata"
 
 
 def check_key(key):

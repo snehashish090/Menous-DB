@@ -17,14 +17,15 @@ methods included:
 3: check-db-exists GET
 4: del-database DELETE
 5: check-table-exists GET
-6: create-table POST
-7: insert-into-table POST
-8: select-where GET
-9: select-columns GET
-10: select-columns-where GET
-11: delete-where DELETE
-12: delete-table DELETE
-13: update-table POST
+6 : get-table GET
+7: create-table POST
+8: insert-into-table POST
+9: select-where GET
+10: select-columns GET
+11: select-columns-where GET
+12: delete-where DELETE
+13: delete-table DELETE
+14: update-table POST
 
 """
 
@@ -119,6 +120,20 @@ def checkTableExists():
         else:
             abort(403)
 
+    except Exception as ex:
+        return str(ex)
+
+@app.route("/get-table", methods=["GET"])
+def getTable():
+    try:
+        key = request.headers['key']
+        database = request.headers['database']
+        table = request.headers['table']
+        if check_key(key):
+            db = dataBase(database)
+            return jsonify(db.get_table(table))
+        else:
+            abort(403)
     except Exception as ex:
         return str(ex)
 

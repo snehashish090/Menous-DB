@@ -45,7 +45,7 @@ class MenousDB:
         if self.url[-1] != '/':
             self.url += '/'
 
-    def readDB(self):
+    def readDb(self):
 
         if self.database == None:
             raise Exception('No database')
@@ -58,7 +58,7 @@ class MenousDB:
         try:
             return ans.json()
         except:
-            return ans.text
+            raise Exception(ans.text)
 
 
     def createDb(self):
@@ -78,7 +78,7 @@ class MenousDB:
         except Exception as ex:
             raise ex
 
-    def deleteDatabase(self):
+    def deleteDb(self):
         if self.database == None:
             raise Exception('No database')
         try:
@@ -171,7 +171,24 @@ class MenousDB:
             return ans.text
 
         except Exception as ex:
-            print(ex)
+            raise ex
+
+    def getTable(self,table):
+        if self.database is None:
+            raise Exception("No database ")
+        try:
+            Headers = {
+                'key': self.key,
+                'database': self.database,
+                'table': table
+            }
+            ans = req.get(self.url + 'get-table', headers=Headers, json=Json)
+            try:
+                return ans.json()
+            except:
+                return ans.text
+        except Exception as ex:
+            raise ex
 
     def selectWhere(self, table, conditions):
         if self.database == None:
@@ -244,7 +261,7 @@ class MenousDB:
         except Exception as ex:
             raise ex
 
-    def delete_where(self, table, conditions):
+    def deleteWhere(self, table, conditions):
         if self.database == None:
             raise Exception('No Database')
         try:
@@ -263,9 +280,9 @@ class MenousDB:
             except:
                 return ans.text
         except Exception as ex:
-            return ex
+            raise ex
 
-    def delete_table(self, table):
+    def deleteTable(self, table):
             if self.database == None:
                 raise Exception('No Database')
             try:
@@ -280,10 +297,10 @@ class MenousDB:
                 except:
                     return ans.text
             except Exception as ex:
-                return ex
+                raise ex
 
 
-    def update_table(self, table, conditions, values):
+    def updateWhere(self, table, conditions, values):
         try:
             Headers = {
                 'key': self.key,
@@ -300,9 +317,9 @@ class MenousDB:
             except:
                 return ans.text
         except Exception as ex:
-            return ex
+            raise ex
         
-    def get_databases(self):
+    def getDatabases(self):
         try:
             Headers = {
                 'key': self.key,
@@ -313,6 +330,6 @@ class MenousDB:
             except:
                 return ans.text()
         except Exception as ex:
-            return ex
+            raise ex
         
         

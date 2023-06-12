@@ -4,10 +4,13 @@
 # Importing necessary modules
 import json
 import os
-from pathlib import Path
-from datetime import datetime
 import random
 import sys
+
+# Checking the platform and creating database directories accordingly
+# If Mac : /Library/Chaches/.menousdb
+# If Windows : APPDATA/MenousDb
+# If Linux : /usr/local/bin/menousdb
 
 if sys.platform == "darwin":
     if not os.path.exists("/Library/Caches/.menousdb"):
@@ -26,13 +29,7 @@ elif sys.platform == "win32":
     if not os.path.exists(os.getenv("APPDATA")+"\\MenoudDb"+"\\authdata"):
         os.mkdir(os.getenv("APPDATA")+"\\MenoudDb\\authdata")
     path = os.getenv("APPDATA")+"\\MenoudDb"+"\\data"
-    authpath=os.getenv("APPDATA")+"\\MenoudDb"+"\\authdata"
-    if not os.path.exists(os.path.join(authpath,"keys.json")):
-        with open(os.path.join(authpath,"keys.json"),"w") as file:
-            json.dump([],file)
-    if not os.path.exists(os.path.join(authpath,"login.json")):
-        with open(os.path.join(authpath,"login.json"),"w") as file:
-            json.dump({},file)
+
 else:
     if not os.path.exists("/usr/local/bin/menousdb"):
         os.mkdir("/usr/local/bin/menousdb")
@@ -41,14 +38,30 @@ else:
     if not os.path.exists("/usr/local/bin/menousdb/authdata"):
         os.mkdir("/usr/local/bin/menousdb/authdata")
     path="/usr/local/bin/menousdb/data"
-    if not os.path.exists(os.path.join(path,"keys.json")):
-        with open(os.path.join(path,"keys.json"),"w") as file:
-            json.dump([],file)
-    if not os.path.exists(os.path.join(path,"login.json")):
-        with open(os.path.join(path,"login.json"),"w") as file:
-            json.dump({},file)
+
+# Using object-oriented programming to simulate each database
 class dataBase:
 
+    """
+    List of class methods:
+
+    01: read_db
+    02: write_db
+    03: create_database
+    04: check_database_exists
+    05: delete_database
+    06: create_table
+    07: check_table_exists
+    08: get_table
+    09: add_value_to_table
+    10: select_where
+    11: select_columns
+    12: select_columns_where
+    13: delete_where
+    14: delete_table
+    15: update_table
+
+    """
     def __init__(self, name):
         self.name = name
 
@@ -85,13 +98,6 @@ class dataBase:
         else:
             raise Exception("Database files not found")
 
-    def check_table_exists(self, table: str):
-        data = self.read_db()
-        if table not in data.keys():
-            return False
-        else:
-            return True
-
     def create_table(self, table_name: str, attributes: list):
         # CREATE TABLE IF NOT EXISTS table_name(attributes)
         if self.check_database_exists() == False:
@@ -102,6 +108,19 @@ class dataBase:
             self.write_db(data)
         else:
             raise Exception("Table already exists")
+
+    def check_table_exists(self, table: str):
+        data = self.read_db()
+        if table not in data.keys():
+            return False
+        else:
+            return True
+
+    def get_table(self, table):
+        if self.check_database_exists() and self.check_table_exists(table):
+            return self.read_db()[table]
+        else:
+            raise Exception("")
 
     def add_value_to_table(self, table, values: dict):
         if self.check_database_exists() == False:
@@ -193,7 +212,7 @@ class dataBase:
                     break
             
 
-    def delete_table(self, table):
+    def delete_table(self, table) -> None:
         if self.check_database_exists() == True:
             data = self.read_db()
             del data[table]
