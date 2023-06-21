@@ -6,8 +6,35 @@
 
 # Importing necessary modules
 from flask import Flask, request, jsonify, abort
-from models import *
 from auth import *
+
+if sys.platform == "darwin":
+    if not os.path.exists("/Library/Caches/.menousdb/config.json"):
+        with open("/Library/Caches/.menousdb/config.json", "w") as file:
+            json.dump({
+                "mode":"json",
+                "port":5555
+            }, file)
+    with open("/Library/Caches/.menousdb/config.json", "r") as file:
+        settings = json.load(file)
+elif sys.platform == "win32":
+    if not os.path.exists(os.getenv("APPDATA")+"\\MenoudDb"+"\\config.json"):
+        with open(os.getenv("APPDATA")+"\\MenoudDb"+"\\config.json", "w") as file:
+            json.dump({
+                "mode":"json",
+                "port":5555
+            } ,file)
+    with open(os.getenv("APPDATA")+"\\MenoudDb"+"\\config.json", "r") as file:
+        settings = json.load(file)
+else:
+    if not os.path.exists("/usr/local/bin/menousdb/config.json"):
+        with open("/usr/local/bin/menousdb/config.json", "w") as file:
+            json.dump({
+                "mode":"json",
+                "port":5555
+            }, file)
+    with open("/usr/local/bin/menousdb/config.json", "r") as file:
+        settings = json.load(file)
 
 """
 methods included:
@@ -29,6 +56,14 @@ methods included:
 
 """
 
+
+mode = settings["mode"]
+port = settings["port"]
+
+if mode == "json":
+    from models import *
+elif mode=="sql":
+    from sql import *
 app = Flask(__name__)
 
 @app.route('/read-db', methods=['GET'])
@@ -325,6 +360,7 @@ def checkCreds(username, password):
     return 'False'
 
 if __name__ == '__main__':
+    
     if len(sys.argv) > 1 and sys.argv[1] == '--newuser':
         signup()
     elif len(sys.argv) > 1 and sys.argv[1] == '--key':
@@ -348,9 +384,5 @@ if __name__ == '__main__':
 ██║░╚═╝░██║███████╗██║░╚███║╚█████╔╝╚██████╔╝██████╔╝  ██████╔╝██████╦╝
 ╚═╝░░░░░╚═╝╚══════╝╚═╝░░╚══╝░╚════╝░░╚═════╝░╚═════╝░  ╚═════╝░╚═════╝░                                                                                   
     """)
-    print("To start the database run --start")
-    print("Menous db will run on port 5555")
-    print("If you wish it to it will run on any port by using --port PORT")
-    print("To create a new user execute menousdb --newuser")
-    print("To get your API key execute menousdb --key\n")
+    app.run(port = port, host="0.0.0.0")
 

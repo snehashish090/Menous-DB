@@ -19,7 +19,14 @@ if sys.platform == "darwin":
         os.mkdir("/Library/Caches/.menousdb/data")
     if not os.path.exists("/Library/Caches/.menousdb/authdata"):
         os.mkdir("/Library/Caches/.menousdb/data")
+    if not os.path.exists("/Library/Caches/.menousdb/config.json"):
+        with open("/Library/Caches/.menousdb/config.json", "w") as file:
+            json.dump({
+                "mode":"json",
+                "port":555
+            }, file)
     path = "/Library/Caches/.menousdb/data"
+
 
 elif sys.platform == "win32":
     if not os.path.exists(os.getenv("APPDATA")+"\\MenoudDb"):
@@ -28,7 +35,15 @@ elif sys.platform == "win32":
         os.mkdir(os.getenv("APPDATA")+"\\MenoudDb/data")
     if not os.path.exists(os.getenv("APPDATA")+"\\MenoudDb"+"\\authdata"):
         os.mkdir(os.getenv("APPDATA")+"\\MenoudDb\\authdata")
+    if not os.path.exists(os.getenv("APPDATA")+"\\MenoudDb"+"\\config.json"):
+        with open(os.getenv("APPDATA")+"\\MenoudDb"+"\\config.json", "w") as file:
+            json.dump({
+                "mode":"json",
+                "port":555
+            }, file)
     path = os.getenv("APPDATA")+"\\MenoudDb"+"\\data"
+
+
 
 else:
     if not os.path.exists("/usr/local/bin/menousdb"):
@@ -37,7 +52,15 @@ else:
         os.mkdir("/usr/local/bin/menousdb/data")
     if not os.path.exists("/usr/local/bin/menousdb/authdata"):
         os.mkdir("/usr/local/bin/menousdb/authdata")
+    if not os.path.exists("/usr/local/bin/menousdb/config.json"):
+        with open("/usr/local/bin/menousdb/config.json", "w") as file:
+            json.dump({
+                "mode":"json",
+                "port":555
+            }, file)
     path="/usr/local/bin/menousdb/data"
+
+
 
 # Using object-oriented programming to simulate each database
 class dataBase:
@@ -252,4 +275,6 @@ def get_databases():
         if ".json" in i:
             databases.append(i.replace(".json", ""))
     return databases
+
+
 
