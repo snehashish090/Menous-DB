@@ -14,7 +14,6 @@ $ sudo menousdb --start
 
 ### 2) Linux
 To install menousdb on any linux distro, you need to manually build the project
-
 ```
 $ sudo apt-get install git
 $ git clone https://github.com/MenousTech/Menous-DB
@@ -37,3 +36,6 @@ curl -o menousdb.exe https://github.com/MenousTech/Menous-DB/releases/download/1
 
 After doing this, add the folder you have curled the file in to your environment path variables
 
+## Release History
+1) Version 0.1.0: https://github.com/MenousTech/Menous-DB/releases/tag/0.1.0
+2) Version 0.0.1: https://github.com/MenousTech/Menous-DB/releases/tag/0.0.1
