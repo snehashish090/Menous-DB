@@ -147,11 +147,15 @@ class dataBase:
         d = sqlite3.connect(os.path.join(path, self.name))
         db = d.cursor()
         q = f"INSERT INTO {table}("
+
+        count = 0
         for i in atts:
-            if atts.index(i) == len(atts)-1:
+            if count == len(atts)-1:
                 q += i + ")"
             else:
                 q += i + ","
+
+            count += 1
 
         q += " VALUES("
 
@@ -161,11 +165,13 @@ class dataBase:
         for i in values:
             vals[atts.index(i)] = values[i]
         
+        count = 0
         for i in vals:
-            if vals.index(i) == len(vals)-1:
+            if count == len(vals)-1:
                 q += "'"+i+"'"+")"
             else:
                 q += "'"+i+"'"+","
+            count += 1
 
         db.execute(q)
         d.commit()
