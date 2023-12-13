@@ -303,6 +303,3 @@ def get_databases():
         if ".db" in i:
             databases.append(i.replace(".db", ""))
     return databases
-
-db = dataBase("locations")
-db.select_columns("odisha", ["district","block"])
