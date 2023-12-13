@@ -81,12 +81,18 @@ To run Menous DB, you need the following software and dependencies installed on 
 
 Follow these steps to install and run Menous DB on your system:
 ### From hombrew for mac
-
-```
-$ brew tap menoustech/tap
-$ brew update
-$ brew install menousdb
-```
+1.  First tap from the repository of Menous Technologies
+    ```
+    $ brew tap menoustech/tap
+    ```
+2. Second update hombrew for changes
+    ```
+    $ brew update
+    ```
+3. Install menousdb using homebrew
+    ```
+    $ brew install menousdb
+    ```
 ### Manual Build
 1. Clone the Menous DB repository from GitHub:
    ```
