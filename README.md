@@ -315,8 +315,8 @@ Menous DB is released under the MIT Open Source Software License. You can find t
 ## 8. Author Information
 
 - Author: Snehashish Laskar
-- Date: 1st November 2022
-- Version: 0.1.0
+- Start Date: 1st November 2022
+- Current Version: 0.2.0
 - Contact: snehashish@example.com
 
 For any questions, feedback, or issues, please contact the author at the provided email address.
