@@ -40,7 +40,7 @@ After doing this, add the folder you have curled the file in to your environment
 1) Version 0.1.0: https://github.com/MenousTech/Menous-DB/releases/tag/0.1.0
 2) Version 0.0.1: https://github.com/MenousTech/Menous-DB/releases/tag/0.0.1 -->
 # Menous DB Documentation
-
+![test](assets/logo-full.png)
 ## Table of Contents
 1. Introduction
 2. System Requirements
@@ -316,7 +316,7 @@ Menous DB is released under the MIT Open Source Software License. You can find t
 
 - Author: Snehashish Laskar
 - Start Date: 1st November 2022
-- Current Version: 0.2.0
+- Current Version: 0.2.1
 - Contact: snehashish@example.com
 
 For any questions, feedback, or issues, please contact the author at the provided email address.

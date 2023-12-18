@@ -168,9 +168,9 @@ class dataBase:
         count = 0
         for i in vals:
             if count == len(vals)-1:
-                q += "'"+i+"'"+")"
+                q += "'"+str(i)+"'"+")"
             else:
-                q += "'"+i+"'"+","
+                q += "'"+str(i)+"'"+","
             count += 1
 
         db.execute(q)
@@ -187,7 +187,7 @@ class dataBase:
 
             q = f"SELECT * FROM {table} WHERE "
             for i in conditions:
-                q += i + "="+"'"+conditions[i]+"'"+" AND "
+                q += str(i) + "="+"'"+str(conditions[i])+"'"+" AND "
             q = q[:-5]
             d = sqlite3.connect(os.path.join(path, self.name))
             db = d.cursor()
@@ -258,7 +258,7 @@ class dataBase:
     def delete_where(self,table,conditions):
         q = f"DELETE FROM {table} WHERE "
         for i in conditions:
-            q += i+"="+"'"+conditions[i]+"'"+" AND "
+            q += str(i)+"="+"'"+str(conditions[i])+"'"+" AND "
         q = q[:-5]
 
         d = sqlite3.connect(os.path.join(path, self.name))
@@ -279,16 +279,25 @@ class dataBase:
             raise Exception('Database does not exist')
         else:
             raise Exception('Table does not exist')
+        
     def update_table(self,table, conditions,values):
         q = f"UPDATE {table} SET "
+        x = 1
         for i in values:
-            q+= i + "="+"'"+values[i]+"'" + " AND "
-        q = q[:-5]
+            if x == len(values):
+                q+= str(i) + "="+"'"+str(values[i])+"'"+" "
+            else:
+                q+= str(i) + "="+"'"+str(values[i])+"'"+", "
+            x += 1
         q += " WHERE "
+        x = 1
         for i in conditions:
-            q += i+"="+"'"+conditions[i]+"'"+" AND "
-        q = q[:-5]
-
+            if x == len(conditions):
+                q += str(i)+"="+"'"+str(conditions[i])+"'"+" "
+            else:
+                q += str(i)+"="+"'"+str(conditions[i])+"'"+" AND "
+            x += 1
+        print(q)
         d = sqlite3.connect(os.path.join(path, self.name))
         db = d.cursor()
 
