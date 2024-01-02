@@ -1,54 +1,126 @@
-import tkinter as tk
-from api import app
-from threading import Thread
-from multiprocessing import Process, set_start_method
+from api import *
+from auth import *
+from prettytable import *
+# authenticate()
 
-set_start_method('fork')
-mu = Process(target=app.run)
+def dbList():
+    tb = PrettyTable(
+        ["Number","Data Base"]
+    )
 
+    x = get_databases()
 
-window = tk.Tk()
+    for i in x:
+        tb.add_row([x.index(i)+1, i])
+    print(tb)
 
-title = tk.Label(text="Menous DB")
-title.pack()
+    return x
 
-status = [False]
+def tableList(database):
+    db = dataBase(database)
+    x = list(db.read_db().keys())
 
-status_label = tk.Label(text="Offline",foreground="red")
-status_label.pack()
+    tb = PrettyTable(
+        ["Number","Table"]
+    )
+    for i in x:
+        tb.add_row([x.index(i)+1, i])
 
-def server_handler():
-    if not exit_flag:
-        app.run()
+    print(tb)
 
-def handler():
-    if status[0] == False:
-        mu.start()
+    return x
+
+def tableData(database, table):
+    db = dataBase(database)
+    data = db.get_table(table)
+
+    atts = ["id"]+data["attributes"]
+
+    tb = PrettyTable(atts)
+
+    for i in data:
+        if i != "attributes":
+            x = [i]
+            for j in data[i]:
+                x.append(data[i][j])
+            tb.add_row(x)
+
+    print(tb)
+
+def explore():
+    z = dbList()
+    db_input = int(input("\nEnter the number to select database: "))
+
+    if db_input > len(z):
+        print("\nNo such database exists\n")
     else:
-        mu.kill()
-def handler():
-    global exit_flag
-    if status[0] == False:
-        status_label.config(text="Online", foreground="green")
-        status_label.pack()
-        status[0] = True
-        start.config(text="Stop Server")
-        handler()
-    else:
-        status_label.config(text="Offline",foreground="red")
-        status_label.pack()
-        status[0] = False
-        exit_flag = False
-        start.config(text="Start Server")
-        handler()
+        y = tableList(z[db_input-1])
+        table_input = int(input("\nEnter the number to select table: "))
+
+        if table_input > len(y):
+            print("\nNo usch table exists\n")
+        else:
+            print()
+            tableData(z[db_input-1], y[table_input-1])
+
+def start():
+    port = int(input("Enter port number: "))
+    host = input("Enter host: ").replace(" ", "")
+    print("""
+    # ███╗░░░███╗███████╗███╗░░██╗░█████╗░██╗░░░██╗░██████╗  ██████╗░██████╗░
+    # ████╗░████║██╔════╝████╗░██║██╔══██╗██║░░░██║██╔════╝  ██╔══██╗██╔══██╗
+    # ██╔████╔██║█████╗░░██╔██╗██║██║░░██║██║░░░██║╚█████╗░  ██║░░██║██████╦╝
+    # ██║╚██╔╝██║██╔══╝░░██║╚████║██║░░██║██║░░░██║░╚═══██╗  ██║░░██║██╔══██╗
+    # ██║░╚═╝░██║███████╗██║░╚███║╚█████╔╝╚██████╔╝██████╔╝  ██████╔╝██████╦╝
+    # ╚═╝░░░░░╚═╝╚══════╝╚═╝░░╚══╝░╚════╝░░╚═════╝░╚═════╝░  ╚═════╝░╚═════╝░                                                                                   
+    #     """)
+    app.run(host=host, port=port)
+
+bindings = {
+    "explore": explore,
+    "list-db":dbList,
+    "new-user":signup,
+    "start":start,
+}
+
+def main():
+    while True:
+        inp = input("menousdb> ")
+        if "help" in inp:
+            print("Commnds available:\n")
+            for i in bindings.keys():
+                print(i)
+        if "exit" in inp:
+            break
+        for i in bindings:
+            if i in inp:
+                bindings[i]()
 
 
-exit_flag = False
-
-thread1 = Thread(target=server_handler)
-
-start = tk.Button(text="Start Server", command=lambda: handler())
-start.pack()
-
-window.mainloop()
-
+if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] == "--cli":
+        main()
+    if len(sys.argv) > 1 and sys.argv[1] == '--newuser':
+        signup()
+    elif len(sys.argv) > 1 and sys.argv[1] == '--key':
+        getuserkey()
+    elif len(sys.argv) > 1 and (sys.argv[1] == '--help' or \
+                                sys.argv[1] == '-h') :
+        print("Welcome to Menous Db")
+        print("Menous db will run on port 5555")
+        print("To create a new user execute menousdb --newuser")
+        print("To get your API key execute menousdb --key")
+    elif "--port" in sys.argv:
+        index = sys.argv.index("--port")
+        app.run(port = sys.argv[index+1], host="0.0.0.0")
+    elif len(sys.argv) > 1 and (sys.argv[1] == "--start" or sys.argv[1] == "--run"):
+        app.run(port = 5555, host="0.0.0.0")
+    print("""
+███╗░░░███╗███████╗███╗░░██╗░█████╗░██╗░░░██╗░██████╗  ██████╗░██████╗░
+████╗░████║██╔════╝████╗░██║██╔══██╗██║░░░██║██╔════╝  ██╔══██╗██╔══██╗
+██╔████╔██║█████╗░░██╔██╗██║██║░░██║██║░░░██║╚█████╗░  ██║░░██║██████╦╝
+██║╚██╔╝██║██╔══╝░░██║╚████║██║░░██║██║░░░██║░╚═══██╗  ██║░░██║██╔══██╗
+██║░╚═╝░██║███████╗██║░╚███║╚█████╔╝╚██████╔╝██████╔╝  ██████╔╝██████╦╝
+╚═╝░░░░░╚═╝╚══════╝╚═╝░░╚══╝░╚════╝░░╚═════╝░╚═════╝░  ╚═════╝░╚═════╝░                                                                                   
+    """)
+    app.run(port = port, host="0.0.0.0", debug=True)

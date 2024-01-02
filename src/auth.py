@@ -94,6 +94,8 @@ def checksignup():
         data = json.load(file)
 
     if data == {}:
+        print("No users have been created")
+        print("Initiating Root User creation")
         signup()
 
 checksignup()
@@ -124,3 +126,19 @@ def Login(username, password):
                 return data[i][1]
         return False
     
+def authenticate():
+    print("\nAUTHENTICATING ROOT USER\n")
+    while True:
+        uname = input("ENTER USRNAME: ").replace(" ", "")
+        pw = getpass.getpass("ENTER PASSWORD: ").replace(" ", "")
+
+        if Login(uname, pw) != False:
+            print("\nAUTHENTICATION SUCCESSFUL")
+            break
+        else:
+            print("\nAUTHENTICATION FAILURE! TRY AGAIN\n")
+
+
+
+
+
