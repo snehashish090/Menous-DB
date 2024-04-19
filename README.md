@@ -80,6 +80,7 @@ To run Menous DB, you need the following software and dependencies installed on 
 ## 3. Installation
 
 Follow these steps to install and run Menous DB on your system:
+
 ### From hombrew for mac
 1.  First tap from the repository of Menous Technologies
     ```
@@ -93,6 +94,7 @@ Follow these steps to install and run Menous DB on your system:
     ```
     $ brew install menousdb
     ```
+
 ### Manual Build
 1. Clone the Menous DB repository from GitHub:
    ```
