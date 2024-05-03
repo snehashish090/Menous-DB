@@ -83,6 +83,7 @@ bindings = {
     "list-db":dbList,
     "new-user":signup,
     "start":start,
+    "get-key":getuserkey,
 }
 
 def main():
