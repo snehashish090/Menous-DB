@@ -176,6 +176,7 @@ class dataBase:
         db.execute(q)
         d.commit()
 
+        return q
     # represents SELECT * FROM table WHERE condition
     def select_where(self, table: str, conditions: dict):
         if self.check_database_exists() == False:
@@ -201,6 +202,9 @@ class dataBase:
                 for j in atts:
                     temp[j] = i[atts.index(j)]
                 answers.append(temp)
+
+            print(q)
+
             return answers
 
             # represets SELECT cloumns FROM table
@@ -230,6 +234,7 @@ class dataBase:
                 for j in temp:
                     ans[columns[i]].append(j[i])
 
+            print(q)
 
             return ans
     
@@ -266,6 +271,8 @@ class dataBase:
 
         db.execute(q)
         d.commit()
+
+        return q
         
     def delete_table(self, table) -> None:
         if self.check_database_exists() == True:
@@ -275,10 +282,13 @@ class dataBase:
 
             db.execute(q)
             d.commit()
+
+            return q
         elif self.check_database_exists() == False:
             raise Exception('Database does not exist')
         else:
             raise Exception('Table does not exist')
+        
         
     def update_table(self,table, conditions,values):
         q = f"UPDATE {table} SET "
@@ -303,6 +313,8 @@ class dataBase:
 
         db.execute(q)
         d.commit()
+
+        return q
 
 
 def get_databases():
